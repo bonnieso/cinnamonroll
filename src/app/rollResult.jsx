@@ -3,8 +3,10 @@ import React from 'react';
 var RollResult = React.createClass({
   render: function() {
     return (
-      <div>Results Page</div>
-      // <p>{this.props.params.rollId}</p>
+      <div>
+      <h2>Results Page</h2>
+      <p>{this.props.params.rollId}</p>
+      </div>
     );
   }
 });

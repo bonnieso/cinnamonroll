@@ -48,6 +48,6 @@ ReactDOM.render((
   <Router history={hashHistory}>
     <Route path="/" component={RollApp}/>
     {/* add the routes here */}
-    <Route path="/results" component={RollResult}/>
+    <Route path="/results/:rollId" component={RollResult}/>
   </Router>
 ), document.getElementById('app'));

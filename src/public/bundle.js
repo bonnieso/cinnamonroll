@@ -125,7 +125,7 @@
 	  _reactRouter.Router,
 	  { history: _reactRouter.hashHistory },
 	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: RollApp }),
-	  _react2.default.createElement(_reactRouter.Route, { path: '/results', component: _rollResult2.default })
+	  _react2.default.createElement(_reactRouter.Route, { path: '/results/:rollId', component: _rollResult2.default })
 	), document.getElementById('app'));
 
 /***/ },
@@ -26227,10 +26227,17 @@
 	    return _react2.default.createElement(
 	      'div',
 	      null,
-	      'Results Page'
-	    )
-	    // <p>{this.props.params.rollId}</p>
-	    ;
+	      _react2.default.createElement(
+	        'h2',
+	        null,
+	        'Results Page'
+	      ),
+	      _react2.default.createElement(
+	        'p',
+	        null,
+	        this.props.params.rollId
+	      )
+	    );
 	  }
 	});
 	
