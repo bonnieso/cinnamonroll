@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Router, Route, hashHistory } from 'react-router';
 import RollList from './rollList.jsx';
+import RollResult from './rollResult.jsx';
 
 var RollApp = React.createClass({
   getInitialState: function() {
@@ -41,4 +43,11 @@ function getRandomInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-ReactDOM.render(<RollApp />, document.getElementById('app'));
+// ReactDOM.render(<RollApp />, document.getElementById('app'));
+ReactDOM.render((
+  <Router history={hashHistory}>
+    <Route path="/" component={RollApp}/>
+    {/* add the routes here */}
+    <Route path="/results" component={RollResult}/>
+  </Router>
+), document.getElementById('app'));
