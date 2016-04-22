@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Router, Route, hashHistory } from 'react-router';
-import RollList from './rollList.jsx';
 import RollResult from './rollResult.jsx';
 
 var RollApp = React.createClass({
@@ -10,13 +9,6 @@ var RollApp = React.createClass({
   },
   componentWillMount: function() {
     this.firebaseRef = new Firebase("https://cinnamon-roll.firebaseio.com/");
-    // this.firebaseRef.on("child_added", function(dataSnapshot) {
-      // console.log("test"+this);
-      // this.items.push(dataSnapshot.val());
-      // this.setState({
-        // items: this.items
-      // });
-    // }.bind(this));
   },
   onRollChange: function(e) {
     this.setState({roll_specification: e.target.value});
@@ -45,10 +37,8 @@ var RollApp = React.createClass({
 
     this.setState({roll_result: rollArray, roll_id: rollId});
 
-    // var rolled = this.state.items.concat([{text: this.state.text, id: Math.random() }]);
-    // var nextText = '';
     this.firebaseRef.child(rollId).set({
-      roll_id: rollId, roll_result: rollArray, character: this.state.character, player: this.state.player, comments: this.state.comments
+      roll_specification: this.state.roll_specification, roll_result: rollArray, character: this.state.character, player: this.state.player, comments: this.state.comments
     });
 
     hashHistory.push('/results/'+rollId);
@@ -84,12 +74,10 @@ function guid() {
     s4() + '-' + s4() + s4() + s4();
 }
 
-// ReactDOM.render(<RollApp />, document.getElementById('app'));
 ReactDOM.render((
   <Router history={hashHistory}>
     <Route path="/" component={RollApp}/>
     {/* add the routes here */}
-    <Route path="/results" component={RollResult}/>
     <Route path="/results/:rollId" component={RollResult}/>
   </Router>
 ), document.getElementById('app'));
