@@ -73,24 +73,52 @@
 	  displayName: 'RollApp',
 	
 	  getInitialState: function getInitialState() {
-	    return { items: [], text: '' };
+	    return { roll_id: '', roll_result: [], roll_specification: '', character: '', player: '', comments: '' };
 	  },
-	  onChange: function onChange(e) {
-	    this.setState({ text: e.target.value });
+	  componentWillMount: function componentWillMount() {
+	    this.firebaseRef = new Firebase("https://cinnamon-roll.firebaseio.com/");
+	    // this.firebaseRef.on("child_added", function(dataSnapshot) {
+	    // console.log("test"+this);
+	    // this.items.push(dataSnapshot.val());
+	    // this.setState({
+	    // items: this.items
+	    // });
+	    // }.bind(this));
+	  },
+	  onRollChange: function onRollChange(e) {
+	    this.setState({ roll_specification: e.target.value });
+	  },
+	  onPlayerChange: function onPlayerChange(e) {
+	    this.setState({ player: e.target.value });
+	  },
+	  onCharacterChange: function onCharacterChange(e) {
+	    this.setState({ character: e.target.value });
+	  },
+	  onCommentsChange: function onCommentsChange(e) {
+	    this.setState({ comments: e.target.value });
 	  },
 	  handleSubmit: function handleSubmit(e) {
 	    e.preventDefault();
-	    var rollArray = [];
 	
-	    var numberOfRolls = this.state.text.split('d')[0];
-	    var numberOfSides = this.state.text.split('d')[1];
+	    var rollArray = [];
+	    var rollId = guid();
+	
+	    var numberOfRolls = this.state.roll_specification.split('d')[0];
+	    var numberOfSides = this.state.roll_specification.split('d')[1];
 	
 	    for (var i = 0; i < numberOfRolls; i++) {
 	      rollArray.push(getRandomInclusive(1, numberOfSides));
 	    }
+	
+	    this.setState({ roll_result: rollArray, roll_id: rollId });
+	
 	    // var rolled = this.state.items.concat([{text: this.state.text, id: Math.random() }]);
 	    // var nextText = '';
-	    this.setState({ items: rollArray });
+	    this.firebaseRef.child(rollId).set({
+	      roll_id: rollId, roll_result: rollArray, character: this.state.character, player: this.state.player, comments: this.state.comments
+	    });
+	
+	    _reactRouter.hashHistory.push('/results/' + rollId);
 	  },
 	  render: function render() {
 	    return _react2.default.createElement(
@@ -101,11 +129,13 @@
 	        null,
 	        'Cinnamon Roll'
 	      ),
-	      _react2.default.createElement(_rollList2.default, { items: this.state.items }),
 	      _react2.default.createElement(
 	        'form',
 	        { onSubmit: this.handleSubmit },
-	        _react2.default.createElement('input', { onChange: this.onChange, value: this.state.text }),
+	        _react2.default.createElement('input', { onChange: this.onRollChange, value: this.state.roll_specification, placeholder: 'ex: 2d6' }),
+	        _react2.default.createElement('input', { onChange: this.onCharacterChange, value: this.state.character, placeholder: 'Character Name' }),
+	        _react2.default.createElement('input', { onChange: this.onPlayerChange, value: this.state.player, placeholder: 'Player Name' }),
+	        _react2.default.createElement('input', { onChange: this.onCommentsChange, value: this.state.comments, placeholder: 'Comments' }),
 	        _react2.default.createElement(
 	          'button',
 	          null,
@@ -120,11 +150,19 @@
 	  return Math.floor(Math.random() * (max - min + 1)) + min;
 	}
 	
+	function guid() {
+	  function s4() {
+	    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+	  }
+	  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+	}
+	
 	// ReactDOM.render(<RollApp />, document.getElementById('app'));
 	_reactDom2.default.render(_react2.default.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.hashHistory },
 	  _react2.default.createElement(_reactRouter.Route, { path: '/', component: RollApp }),
+	  _react2.default.createElement(_reactRouter.Route, { path: '/results', component: _rollResult2.default }),
 	  _react2.default.createElement(_reactRouter.Route, { path: '/results/:rollId', component: _rollResult2.default })
 	), document.getElementById('app'));
 
@@ -26185,21 +26223,16 @@
 	  displayName: 'RollList',
 	
 	  render: function render() {
-	    var createItem = function createItem(item, index) {
-	      return _react2.default.createElement(
-	        'li',
-	        { key: index + 1 },
-	        'Dice ',
-	        index + 1,
-	        ' Result: ',
-	        item
-	      );
-	    };
+	    // var createItem = function(item, index) {
+	    //   return <li key = {index+1} >Dice {index+1} Result: {item}</li>;
+	    // };
 	    return _react2.default.createElement(
-	      'ul',
+	      'div',
 	      null,
-	      this.props.items.map(createItem)
-	    );
+	      'Rolled!'
+	    )
+	    //   <ul>{this.props.items.map(createItem)}</ul>
+	    ;
 	  }
 	});
 	
@@ -26212,7 +26245,7 @@
   \********************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	var _react = __webpack_require__(/*! react */ 1);
 	
@@ -26221,19 +26254,30 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	var RollResult = _react2.default.createClass({
-	  displayName: 'RollResult',
+	  displayName: "RollResult",
 	
+	  componentWillMount: function componentWillMount() {
+	    this.firebaseRef = new Firebase("https://cinnamon-roll.firebaseio.com/");
+	
+	    var rollId = this.props.params.rollId;
+	
+	    this.firebaseRef.child(rollId).on("value", function (snapshot) {
+	      console.log(snapshot.val());
+	    }, function (errorObject) {
+	      console.log("The read failed: " + errorObject.code);
+	    });
+	  },
 	  render: function render() {
 	    return _react2.default.createElement(
-	      'div',
+	      "div",
 	      null,
 	      _react2.default.createElement(
-	        'h2',
+	        "h2",
 	        null,
-	        'Results Page'
+	        "Results Page"
 	      ),
 	      _react2.default.createElement(
-	        'p',
+	        "p",
 	        null,
 	        this.props.params.rollId
 	      )
