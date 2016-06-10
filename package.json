@@ -20,8 +20,8 @@
   },
   "scripts": {
     "test": "test",
-    "watch": "webpack -d --watch",
-    "build": "webpack -p && gulp --cwd ./gulp"
+    "watch": "webpack -d --watch && gulp --cwd ./gulp",
+    "build": "webpack -p --watch && gulp --cwd ./gulp"
   },
   "repository": {
     "type": "git",

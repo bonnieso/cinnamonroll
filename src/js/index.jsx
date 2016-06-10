@@ -46,15 +46,21 @@ var RollApp = React.createClass({
   },
   render: function() {
     return (
-      <div>
-        <h3>Cinnamon Roll</h3>
-        <form onSubmit={this.handleSubmit}>
-          <input onChange={this.onRollChange} value={this.state.roll_specification} placeholder="ex: 2d6" />
-          <input onChange={this.onCharacterChange} value={this.state.character} placeholder="Character Name"/>
-          <input onChange={this.onPlayerChange} value={this.state.player} placeholder="Player Name"/>
-          <input onChange={this.onCommentsChange} value={this.state.comments} placeholder="Comments"/>
-          <button>Roll</button>
-        </form>
+      <div style={body_wrapper}>
+        <div style={full_column}>
+          <h1>Cinnamon Roller</h1>
+        </div>
+        <div style={left_column}>
+          <form onSubmit={this.handleSubmit}>
+            <input type="text" onChange={this.onRollChange} value={this.state.roll_specification} placeholder="ex: 2d6" />
+            <input onChange={this.onCharacterChange} value={this.state.character} placeholder="Character Name"/>
+            <input onChange={this.onPlayerChange} value={this.state.player} placeholder="Player Name"/>
+            <input onChange={this.onCommentsChange} value={this.state.comments} placeholder="Comments"/>
+            <button>Roll</button>
+          </form>
+        </div>
+        <div style={right_column}>
+        </div>
       </div>
     );
   }
@@ -73,6 +79,31 @@ function guid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
     s4() + '-' + s4() + s4() + s4();
 }
+
+var body_wrapper = {
+  width: '100%',
+  height: '100%'
+}
+
+var full_column = {
+  width: '100%',
+  display: 'block',
+  'textAlign': 'center'
+}
+
+var left_column = {
+  width: '50%',
+  display: 'inline-block',
+  'verticalAlign': 'top',
+  height: '100%'
+};
+
+var right_column = {
+  width: '50%',
+  background: '#2F3238',
+  display: 'inline-block',
+  height: '100%'
+};
 
 ReactDOM.render((
   <Router history={hashHistory}>

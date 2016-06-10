@@ -1,3 +1,43 @@
 body {
-  background-color: #FFF2D8;
+  background-color: #2F3238;
+
+  h1 {
+    font-family: 'Vibur', cursive;
+    font-size: 60px;
+    margin: 1em;
+    color: #43464B;
+  }
+
+  form {
+    padding: 0 0 0 4em;
+    text-align: right;
+
+    input {
+      position: relative;
+      display: block;
+      background: #494E57;
+      border: 2px solid #494E57;
+      font-weight: 400;
+      font-family: "Poppins", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      -webkit-appearance: none; /* for box shadows to show on iOS */
+      padding: 1em;
+      margin: 1em 0 0 0;
+      width: 100%;
+      font-size: 1em;
+    }
+
+    input:focus {
+    	outline: none;
+    }
+
+    button {
+      background: #82828F;
+      font-size: 1.5em;
+      border: 2px solid #2F3238;
+      padding: .65em 2em;
+      color: #fff;
+    }
+
+  }
+
 }
