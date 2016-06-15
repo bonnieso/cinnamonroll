@@ -47,19 +47,17 @@ var RollApp = React.createClass({
   render: function() {
     return (
       <div style={body_wrapper}>
-        <div style={full_column}>
-          <h1>Cinnamon Roller</h1>
-        </div>
         <div style={left_column}>
+         <img src="./images/cinnamon-roll-graphic.png" />
+        </div>
+        <div style={right_column}>
           <form onSubmit={this.handleSubmit}>
-            <input type="text" onChange={this.onRollChange} value={this.state.roll_specification} placeholder="ex: 2d6" />
+            <input type="text" onChange={this.onRollChange} value={this.state.roll_specification} placeholder="Ex: 2d6" />
             <input onChange={this.onCharacterChange} value={this.state.character} placeholder="Character Name"/>
             <input onChange={this.onPlayerChange} value={this.state.player} placeholder="Player Name"/>
             <input onChange={this.onCommentsChange} value={this.state.comments} placeholder="Comments"/>
-            <button>Roll</button>
+            <button>ROLL</button>
           </form>
-        </div>
-        <div style={right_column}>
         </div>
       </div>
     );
@@ -85,24 +83,19 @@ var body_wrapper = {
   height: '100%'
 }
 
-var full_column = {
-  width: '100%',
-  display: 'block',
-  'textAlign': 'center'
-}
-
-var left_column = {
+var right_column = {
   width: '50%',
   display: 'inline-block',
   'verticalAlign': 'top',
   height: '100%'
 };
 
-var right_column = {
+var left_column = {
   width: '50%',
   background: '#2F3238',
   display: 'inline-block',
-  height: '100%'
+  height: '100%',
+  'textAlign': 'center'
 };
 
 ReactDOM.render((
